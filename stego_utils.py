@@ -1,3 +1,4 @@
+import os
 from PIL import Image
 
 def text_to_binary(text):
@@ -14,8 +15,17 @@ def binary_to_int(b):
     return int(b, 2)
 
 def encode_text_in_image(image_path, text, output_path):
+    # Open and convert input image to RGB
     img = Image.open(image_path).convert("RGB")
+    
+    # Resize and convert to PNG internally (regardless of format)
     img = img.resize((128, 128))
+    
+    # Save to temp PNG to avoid compression artifacts from formats like JPG
+    temp_path = "uploads/temp_input.png"
+    img.save(temp_path, format="PNG")
+    
+    img = Image.open(temp_path)
     pixels = img.load()
 
     binary_text = text_to_binary(text)
@@ -37,7 +47,8 @@ def encode_text_in_image(image_path, text, output_path):
         if data_index >= len(full_data):
             break
 
-    img.save(output_path)
+    img.save(output_path, format="PNG")  # Always save stego image as PNG
+    os.remove(temp_path)
 
 def decode_text_from_image(image_path):
     img = Image.open(image_path).convert("RGB")
