@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Steganography Web App</title>
+  <style>
+    body { font-family: Arial; background: #f0f0f0; padding: 30px; }
+    form { background: #fff; padding: 20px; border-radius: 10px; width: 400px; margin: auto; }
+    h2 { text-align: center; }
+    input, textarea, button { width: 100%; margin: 10px 0; padding: 10px; }
+    .message { text-align: center; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+  <form action="/encrypt" method="post" enctype="multipart/form-data">
+    <h2>🔐 Hide Text in Image</h2>
+    <input type="file" name="image" required>
+    <textarea name="text" placeholder="Enter text to hide..." rows="4" required></textarea>
+    <button type="submit">Encrypt and Download Image</button>
+  </form>
+
+  <form action="/decrypt" method="post" enctype="multipart/form-data">
+    <h2>🔍 Extract Text from Image</h2>
+    <input type="file" name="image" required>
+    <button type="submit">Decrypt</button>
+  </form>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="message">
+        {% for category, msg in messages %}
+          <p style="color: {{ 'green' if category == 'success' else 'red' }};">{{ msg }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+</body>
+</html>
